@@ -4,29 +4,43 @@ from datetime import date
 
 
 
-
+# make directory
 today = date.today()
 d4 = today.strftime("%b-%d-%Y")
 dat = str(d4)
 os.makedirs(dat)
 
-
+# input file
 l = input("input list file : ")
 a = open('api.txt', 'r').read().splitlines()
-c = int(input("how many check 1 api : "))
+b = open('list.txt', 'r').read().splitlines()
+c = int(input("how many check on 1 api : "))
 ba = open(l, 'r').read().splitlines()
 ac = len(ba)
 ad = str(ba)
 lo = ac // c
 li = lo+1
 
-
+#split list
 for i in range(1, li+1):
     n = i * c
     n2 = n - c
     ap = open(os.path.join(dat, f'list{i}.txt'), 'a+')
     for line in ba[n2:n]:
         ap.write(line + '\n')
-    
 
+# excute the list
+for i in range(0, len(a)):
+    mbv = MailboxValidator.EmailValidation(a[0+i])
+    lb = open(os.path.join(dat, f'list{i+1}.txt'), 'r')
+    for j in range(0, len(lb)):
+        results = mbv.validate_email(lb[0+j])
+        if results is None:
+            print("Error connecting to API.\n")
+        elif results['error_code'] == '':
+            print('email_address = ' + results['email_address'] + "\n")
+            print('mailboxvalidator_score = ' + str(results['mailboxvalidator_score']) + "\n")
+        else:
+            print('error_code = ' + results['error_code'] + "\n")
+            
 
